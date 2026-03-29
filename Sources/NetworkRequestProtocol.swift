@@ -3,28 +3,28 @@ import Foundation
 import FoundationNetworking
 #endif
 
-protocol NetworkRequest {
+public protocol NetworkRequest {
     var url: URL? { get }
     var method: HTTPMethod { get }
     var headers: [HTTPHeader: String]? { get }
     var parameters: (any Encodable)? { get }
 }
 
-enum HTTPMethod: String {
+public enum HTTPMethod: String {
     case get = "GET"
     case post = "POST"
     case put = "PUT"
     case delete = "DELETE"
 }
 
-enum HTTPHeader: String {
+public enum HTTPHeader: String {
     case contentType = "Content-Type"
     case authorization = "Authorization"
     case baseToken = "X-User-BaseToken"
     case scopedToken = "X-User-ScopedToken"
 }
 
-enum ContentType: String {
+public enum ContentType: String {
     case json = "application/json"
     case xml = "application/xml"
     case formUrlEncoded = "application/x-www-form-urlencoded"

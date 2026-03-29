@@ -3,13 +3,13 @@ import Foundation
 import FoundationNetworking
 #endif
 
-actor NetworkManager {
-    static let shared = NetworkManager()
+public actor NetworkManager {
+    public static let shared = NetworkManager()
     private let urlSession = URLSession.shared
     
     private init() {}
     
-    func perform<T: Decodable>(_ request: any NetworkRequest, decodeTo type: T.Type) async throws -> T {
+    public func perform<T: Decodable>(_ request: any NetworkRequest, decodeTo type: T.Type) async throws -> T {
         let urlRequest = try request.urlRequest()
         print("-----------------------------------✅Se encontro una peticion✅------------------------------------")
         let (data, response) = try await urlSession.data(for: urlRequest)

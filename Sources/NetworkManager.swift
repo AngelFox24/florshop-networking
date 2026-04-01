@@ -22,7 +22,7 @@ public actor NetworkManager {
     private func decodeData<T: Decodable>(data: Data, type: T.Type) throws -> T {
         do {
             let decoder = JSONDecoder()
-            decoder.dateDecodingStrategy = .iso8601
+            decoder.dateDecodingStrategy = .secondsSince1970
             let decodedObject = try decoder.decode(T.self, from: data)
             return decodedObject
         } catch let decodingError {

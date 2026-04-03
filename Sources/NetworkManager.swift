@@ -6,17 +6,28 @@ import FoundationNetworking
 public actor NetworkManager {
     public static let shared = NetworkManager()
     private let urlSession = URLSession.shared
-    
+    private var isDebug: Bool = false
     private init() {}
+    
+    public func enableDebugLogging() {
+        isDebug = true
+    }
     
     public func perform<T: Decodable>(_ request: any NetworkRequest, decodeTo type: T.Type) async throws -> T {
         let urlRequest = try request.urlRequest()
-        print("-----------------------------------✅Se encontro una peticion✅------------------------------------")
+        NetworkLogger.logRequest(urlRequest, isDebug: isDebug)
         let (data, response) = try await urlSession.data(for: urlRequest)
-        print(data.jsonString())
-        print("-----------------------------------✅Termino de la peticion✅------------------------------------")
+        NetworkLogger.logResponse(data: data, response: response, isDebug: isDebug)
         try processResponse(response: response, data: data)
         return try decodeData(data: data, type: T.self)
+    }
+    
+    public func perform(_ request: any NetworkRequest) async throws {
+        let urlRequest = try request.urlRequest()
+        NetworkLogger.logRequest(urlRequest, isDebug: isDebug)
+        let (data, response) = try await urlSession.data(for: urlRequest)
+        NetworkLogger.logResponse(data: data, response: response, isDebug: isDebug)
+        try processResponse(response: response, data: data)
     }
     
     private func decodeData<T: Decodable>(data: Data, type: T.Type) throws -> T {
@@ -26,7 +37,6 @@ public actor NetworkManager {
             let decodedObject = try decoder.decode(T.self, from: data)
             return decodedObject
         } catch let decodingError {
-            print("Error al decodificar: \(decodingError.localizedDescription)")
             throw NetworkError.decodingFailed(decodingError)
         }
     }

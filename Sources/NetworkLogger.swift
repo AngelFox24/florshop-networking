@@ -1,5 +1,9 @@
 import Foundation
 
+#if canImport(FoundationNetworking)
+import FoundationNetworking
+#endif
+
 struct NetworkLogger {
     static func logRequest(_ request: URLRequest, isDebug: Bool) {
         guard isDebug else { return }
